@@ -1,0 +1,50 @@
+--* 다음 조건에 맞는 PL/SQL문을 작성하고 문제상황의 원인을 작성하시오.
+--
+--1. 직원의 STAFF_NO를 입력하면
+--
+-- STAFF_NO = &STAFF번호입력;
+-- 
+--2. 직원의 급여와 이름 그리고 연봉을 출력하는 구문 작성하시오
+--(단, 보너스가 NULL인 사원은 급여*12로 계산, 보너스가 있는 사원은 보너스 포함 연봉을 출력
+--
+--출력시 연봉은 원(\)표시 3자리마다 컴마(,)표시가 되도록 하시오)
+--: 출력 결과 예시 => 5000000 홍길동 \60,000,000
+--* 테이블 구조
+SET SERVEROUTPUT ON;
+
+CREATE TABLE STAFF(
+STAFF_NO NUMBER PRIMARY KEY,
+STAFF_NAME VARCHAR(20) NOT NULL,
+SALARY NUMBER NOT NULL,
+BONUS NUMBER
+);
+
+INSERT INTO STAFF VALUES(100,'홍길동',5000000,NULL);
+
+--* 소스코드
+DECLARE
+VEMP STAFF%ROWTYPE;
+YSALARY NUMBER;
+BEGIN
+
+SELECT *
+INTO VEMP
+FROM STAFF
+WHERE STAFF_NO =&번호입력;
+YSALARY := (VEMP.SALARY+ VEMP.SALARY * NVL(VEMP.BONUS,0))*12;
+DBMS_OUTPUT.PUT_LINE(VEMP.STAFF_NAME||'\'||TO_CHAR(YSALARY,'FM99,999,999'));
+
+/*
+SELECT *
+INTO VEMP
+FROM STAFF
+WHERE STAFF_NO =&스탭번호;
+
+YSALARY := (VEMP.SALARY+VEMP.SALARY*NVL(VEMP.BONUS,0))*12;   
+    DBMS_OUTPUT.PUT_LINE(VEMP.STAFF_NAME||'\'||TO_CHAR(YSALARY,'FM999,999,999')); 
+*/
+END;
+/
+
+
+
